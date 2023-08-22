@@ -9,12 +9,16 @@ pygame.init()
 
 def startGetPrices():
     try:
+        # GET AND PARSE THE HTML
         url = link.get()
         result = requests.get(url)
         doc = BeautifulSoup(result.text, "html.parser")
         car_advertisements = doc.find_all("a", class_="adCard_anchor__hJqwV")
+
+        # MAKE ARRAY FOR THE DESIRED INFO
         prices=[]
 
+        #GO THROUGH THE FETCHED MATERIAL
         for ad in car_advertisements:
             price_element = ad.find("p", class_="m:mb-4 typography_shared__SK_V2 typography_m-headingS__ozYY8 typography_subtitle2__nF6ow")
             details_element = ad.find("p", class_="hidden m:block float-left text-gray-dark typography_shared__SK_V2 typography_m-body1__5__iP typography_body2__fCRbo")
@@ -33,35 +37,26 @@ def startGetPrices():
 
                 year = year_match.group(1) if year_match else "N/A"
                 transmission = transmission_match.group(1) if transmission_match else "N/A"
-
+                
+                #SORT WANTED DATA NICELY
                 details = f"Price: {price_text} €\n" \
                           f"Mileage: {mileage_text}\n" \
                            f"Year: {year}\n" \
                           f"Transmission: {transmission}\n\n"
-
+                
+                #ADD SORTED DATA (DETAILS) INTO THE ARRAY (PRICES)
                 prices.append(details)
         prices_text_area.delete(1.0, tkinter.END)
 
-        # Insert the sorted prices into the text area
+        # INSERTING PRICES ON TEXTAREA
         for price in prices:
             prices_text_area.insert(tkinter.END, price)
 
-        finishLabel.configure(text="Fetching complete.", text_color="green")  # Success message
+        finishLabel.configure(text="Fetching complete.", text_color="green")  # SUCCESS!
 
     except Exception as e:
-        finishLabel.configure(text=f"Error: {e}", text_color="red")  # Display error message
- # Display error message
-
-
-       # sortedPrices=sorted(prices, key=lambda x: int (x.replace(" €","").replace(" ", "")))
-        #prices_text_area.delete(1.0, tkinter.END)
-        #for price in sortedPrices:
-         #   prices_text_area.insert(tkinter.END, price + "\n")
-
-        #finishLabel.configure(text="Fetching complete.", text_color="green")  # Success message
-
-    #except Exception as e:
-       # finishLabel.configure(text=f"Error {e}", text_color="red")  # Error message
+        finishLabel.configure(text=f"Error: {e}", text_color="red")  # DISPLAY ERROR
+ 
 
 
 # SYSTEM SETTINGS
