@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
-import tkinter
+import tkinter 
 from tkinter import ttk
+from tkinter import filedialog
 import customtkinter
 import pygame
 import re
@@ -78,7 +79,14 @@ def startGetPrices():
     except Exception as e:
         finishLabel.configure(text=f"Error: {e}", text_color="red")  # DISPLAY ERROR
  
+def save_to_txt():
+    text_content= prices_text_area.get("1.0", tkinter.END)
+    file_path=filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
 
+    if file_path:
+        with open(file_path, "w") as file:
+            file.write(text_content)
+        print("File saved successfully.")
 
 # SYSTEM SETTINGS
 customtkinter.set_appearance_mode("System")
@@ -167,7 +175,6 @@ manual_radio=tkinter.Radiobutton(transmission_frame, text="Manuaali", variable=v
 auto_radio.pack(side="left", padx=10)
 manual_radio.pack(side="left", padx=10)
 
-
 # GET BUTTON
 getPrices = customtkinter.CTkButton(app, text="Hae", command=startGetPrices)
 getPrices.pack(padx=10, pady=10)
@@ -175,6 +182,12 @@ getPrices.pack(padx=10, pady=10)
 # TEXT AREA FOR PRICES
 prices_text_area = tkinter.Text(app, height=10, width=70)
 prices_text_area.pack(padx=10, pady=10)
+
+# BUTTON TO SAVE TEXT AREA CONTENT TO TXT FILE
+save_button = ttk.Button(app, text="Tallenna TXT-tiedostoon", command=save_to_txt)
+save_button.pack(padx=10, pady=5)
+
+
 
 
 # RUN APP
